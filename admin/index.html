@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gestione auto · Nico Automotive</title>
+<link rel="icon" href="../img/logo.png">
+<style>
+:root{--bg:#0d0e10;--panel:#16181b;--line:#2b2f34;--fg:#f4f4f2;--mut:#9aa0a6;--green:#3f8a4b;--gold:#d4b46a;--red:#c0453a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 "Helvetica Neue",Arial,sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+header img{height:34px}
+header h1{font-size:17px;margin:0;flex:1}
+main{max-width:860px;margin:0 auto;padding:16px}
+button,.btn{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:9px 14px;border-radius:8px;cursor:pointer}
+button.primary{background:var(--green);border-color:var(--green);font-weight:600}
+button.danger{color:#ffb4ab;border-color:#5a2a25}
+button:disabled{opacity:.5;cursor:wait}
+input,select{font:inherit;width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:#0f1113;color:var(--fg)}
+label{display:block;font-size:13px;color:var(--mut)}
+label>input,label>select,label>div{margin-top:4px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.row{display:flex;gap:10px;align-items:center}
+.list{display:grid;gap:10px;margin-top:14px}
+.item{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px}
+.item img{width:96px;height:72px;object-fit:cover;border-radius:8px;background:#222;flex:none}
+.item .t{flex:1;min-width:0}
+.item .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .t span{color:var(--mut);font-size:13px}
+.item .p{color:var(--gold);font-weight:600;white-space:nowrap}
+.item .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.grid .full{grid-column:1/-1}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.item{flex-wrap:wrap}.item .acts{width:100%;justify-content:stretch}.item .acts button{flex:1}}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:8px}
+.ph{position:relative;border-radius:8px;overflow:hidden;background:#222;aspect-ratio:4/3}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .n{position:absolute;left:4px;top:4px;background:#000a;font-size:12px;padding:1px 6px;border-radius:6px}
+.ph .b{position:absolute;bottom:4px;left:4px;right:4px;display:flex;gap:4px}
+.ph .b button{flex:1;padding:2px 0;font-size:14px;background:#000b}
+.msg{margin:12px 0;padding:10px 12px;border-radius:8px;display:none}
+.msg.ok{display:block;background:#1d3a22;border:1px solid var(--green)}
+.msg.err{display:block;background:#3a1d1a;border:1px solid var(--red)}
+.msg.info{display:block;background:#1b2430;border:1px solid #2f4b6b}
+.mut{color:var(--mut);font-size:13px}
+h2{font-size:18px;margin:0 0 12px}
+a{color:var(--gold)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><img src="../img/logo.png" alt=""><h1>Gestione auto</h1><button id="logout" hidden>Esci</button></header>
+<main>
+  <div id="msg" class="msg"></div>
+
+  <section id="login" class="card" hidden>
+    <h2>Accesso riservato</h2>
+    <p class="mut">Inserisci la chiave di accesso (token GitHub). Va inserita una sola volta su ogni dispositivo.</p>
+    <label>Chiave di accesso<input id="token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+    <div class="row" style="margin-top:12px"><button class="primary" id="enter">Entra</button></div>
+  </section>
+
+  <section id="home" hidden>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+      <div><b id="tot"></b> <span class="mut">· il sito si aggiorna 1–2 minuti dopo ogni salvataggio</span></div>
+      <button class="primary" id="add">+ Aggiungi auto</button>
+    </div>
+    <div class="list" id="list"></div>
+    <p class="mut" style="margin-top:18px"><a href="../" target="_blank">Apri il sito</a></p>
+  </section>
+
+  <section id="edit" class="card" hidden>
+    <h2 id="etitle">Nuova auto</h2>
+    <div class="grid">
+      <label>Marca *<input id="make" list="l-make" required></label>
+      <label>Modello *<input id="model" required></label>
+      <label class="full">Versione *<input id="ver" placeholder="es. 1.6 Mjt 130 CV Limited" required></label>
+      <label>Prezzo (€) *<input id="price" type="number" inputmode="numeric" min="0" required></label>
+      <label>Chilometri *<input id="km" type="number" inputmode="numeric" min="0" required></label>
+      <label>Immatricolazione *<div class="row"><select id="regm" style="flex:1"></select><input id="regy" type="number" inputmode="numeric" placeholder="Anno" style="flex:1"></div></label>
+      <label>Alimentazione *<input id="fuel" list="l-fuel" required></label>
+      <label>Cambio *<input id="gear" list="l-gear" required></label>
+      <label>Classe emissioni *<input id="euro" list="l-euro" required></label>
+      <label>Carrozzeria *<select id="body"><option value="city">Berlina / citycar</option><option value="wagon">Station wagon</option><option value="suv">SUV</option><option value="mpv">Monovolume</option></select></label>
+      <label>Potenza (CV)<input id="cv" type="number" inputmode="numeric" min="0"></label>
+      <label>Colore<input id="color" list="l-color"></label>
+      <label>Proprietari<input id="owners" list="l-own"></label>
+      <label class="full">Link annuncio Subito (facoltativo)<input id="sub" type="url" placeholder="https://www.subito.it/auto/…"></label>
+      <div class="full">
+        <label>Foto * <span class="mut">(la prima è la copertina; la filigrana viene aggiunta in automatico)</span></label>
+        <div class="row" style="margin-top:6px;flex-wrap:wrap"><label class="btn" style="color:var(--fg)">Scegli foto<input id="files" type="file" accept="image/*" multiple hidden></label><button id="clearph" type="button">Togli tutte</button></div>
+        <div class="photos" id="photos"></div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:16px;flex-wrap:wrap"><button class="primary" id="save">Salva e pubblica</button><button id="cancel">Annulla</button><span class="mut" id="prog"></span></div>
+  </section>
+</main>
+
+<datalist id="l-make"></datalist>
+<datalist id="l-fuel"><option>Benzina</option><option>Diesel</option><option>Ibrida</option><option>Ibrida plug-in</option><option>Elettrica</option><option>GPL</option><option>Metano</option></datalist>
+<datalist id="l-gear"><option>Manuale</option><option>Automatico</option></datalist>
+<datalist id="l-euro"><option>Euro 6</option><option>Euro 5</option><option>Euro 4</option></datalist>
+<datalist id="l-color"><option>Bianco</option><option>Nero</option><option>Grigio</option><option>Argento</option><option>Blu</option><option>Rosso</option></datalist>
+<datalist id="l-own"><option>Unico proprietario</option><option>2 proprietari</option><option>3 proprietari</option></datalist>
+
+<script src="build.js"></script>
+<script>
+const REPO = "ske85/NICOAUTOMOTIVE", BR = "main", API = "https://api.github.com/repos/" + REPO;
+const AUTHOR = { name: "ske85", email: "ske85@users.noreply.github.com" };
+const $ = id => document.getElementById(id);
+let TOKEN = null, CARS = [], editing = null, photos = [];
+try { TOKEN = localStorage.getItem("nico_token"); } catch (e) {}
+
+function msg(text, kind = "info") { const m = $("msg"); m.className = "msg " + kind; m.textContent = text; if (!text) m.className = "msg"; }
+function show(id) { for (const s of ["login", "home", "edit"]) $(s).hidden = s !== id; $("logout").hidden = id === "login"; window.scrollTo(0, 0); }
+
+async function gh(path, opt = {}) {
+  const r = await fetch(path.startsWith("http") ? path : API + path, Object.assign({}, opt, {
+    cache: "no-store",
+    headers: Object.assign({ Authorization: "Bearer " + TOKEN, Accept: "application/vnd.github+json" }, opt.headers || {})
+  }));
+  if (!r.ok) { const t = await r.text(); const e = new Error(r.status + " " + t.slice(0, 200)); e.status = r.status; throw e; }
+  return opt.raw ? r.text() : r.json();
+}
+const raw = (p, ref) => gh(`/contents/${p}?ref=${ref}`, { raw: true, headers: { Accept: "application/vnd.github.raw+json" } });
+
+async function head() {
+  const ref = await gh(`/git/ref/heads/${BR}`);
+  const commit = await gh(`/git/commits/${ref.object.sha}`);
+  return { sha: ref.object.sha, tree: commit.tree.sha };
+}
+async function loadFiles(sha) {
+  const [index, llms, sitemap] = await Promise.all([raw("index.html", sha), raw("llms.txt", sha), raw("sitemap.xml", sha)]);
+  return { index, llms, sitemap };
+}
+
+async function login() {
+  msg("Verifica in corso…");
+  try {
+    const repo = await gh("");
+    if (!repo.permissions || !repo.permissions.push) throw new Error("La chiave non ha il permesso di scrittura");
+    await refresh();
+    msg("");
+  } catch (e) {
+    try { localStorage.removeItem("nico_token"); } catch (x) {}
+    TOKEN = null; show("login");
+    msg(e.status === 401 ? "Chiave non valida o scaduta." : "Accesso non riuscito: " + e.message, "err");
+  }
+}
+
+async function refresh() {
+  const h = await head();
+  const f = await loadFiles(h.sha);
+  CARS = SiteBuild.parseCars(f.index).sort((a, b) => a.price - b.price);
+  renderList(); show("home");
+}
+
+function renderList() {
+  $("tot").textContent = CARS.length + (CARS.length === 1 ? " auto online" : " auto online");
+  $("l-make").innerHTML = [...new Set(CARS.map(c => c.make))].sort().map(m => `<option>${m}</option>`).join("");
+  $("list").innerHTML = CARS.map((c, i) => `
+    <div class="item">
+      <img src="../img/${c.pid}_0.jpg?v=${c.n}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <div class="t"><b>${esc(c.make + " " + c.model)}</b><span>${esc(c.ver)} · ${c.reg} · ${SiteBuild.fmt(c.km)} km · ${c.n} foto</span></div>
+      <div class="p">${SiteBuild.eur(c.price)}</div>
+      <div class="acts"><button data-e="${i}">Modifica</button><button class="danger" data-d="${i}">Elimina</button></div>
+    </div>`).join("") || '<p class="mut">Nessuna auto.</p>';
+}
+const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
+
+// ---------- editor ----------
+const MESI = ["01","02","03","04","05","06","07","08","09","10","11","12"];
+$("regm").innerHTML = '<option value="">Mese</option>' + MESI.map(m => `<option>${m}</option>`).join("");
+const F = ["make", "model", "ver", "price", "km", "fuel", "gear", "euro", "body", "cv", "color", "owners", "sub"];
+
+function openEditor(car) {
+  editing = car || null;
+  $("etitle").textContent = car ? `Modifica ${car.make} ${car.model}` : "Nuova auto";
+  for (const k of F) $(k).value = car && car[k] != null ? car[k] : (k === "body" ? "city" : "");
+  const [m, y] = car ? car.reg.split("/") : ["", ""];
+  $("regm").value = m; $("regy").value = y;
+  photos = car ? Array.from({ length: car.n }, (_, k) => ({ old: `img/${car.pid}_${k}.jpg`, url: `../img/${car.pid}_${k}.jpg` })) : [];
+  renderPhotos(); $("prog").textContent = ""; msg(""); show("edit");
+}
+function renderPhotos() {
+  $("photos").innerHTML = photos.map((p, i) => `<div class="ph"><img src="${p.url}" alt=""><span class="n">${i + 1}</span>
+    <div class="b"><button type="button" data-l="${i}" aria-label="Sposta a sinistra">◀</button><button type="button" data-x="${i}" aria-label="Togli">✕</button><button type="button" data-r="${i}" aria-label="Sposta a destra">▶</button></div></div>`).join("");
+}
+$("photos").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const d = b.dataset, i = +(d.l ?? d.x ?? d.r);
+  if (d.x != null) photos.splice(i, 1);
+  if (d.l != null && i > 0) [photos[i - 1], photos[i]] = [photos[i], photos[i - 1]];
+  if (d.r != null && i < photos.length - 1) [photos[i + 1], photos[i]] = [photos[i], photos[i + 1]];
+  renderPhotos();
+};
+$("files").onchange = e => { for (const f of e.target.files) photos.push({ file: f, url: URL.createObjectURL(f) }); e.target.value = ""; renderPhotos(); };
+$("clearph").onclick = () => { if (confirm("Togliere tutte le foto?")) { photos = []; renderPhotos(); } };
+
+let LOGO = null;
+async function logo() { if (!LOGO) { const r = await fetch("../img/logo-wm.png"); LOGO = await createImageBitmap(await r.blob()); } return LOGO; }
+async function processPhoto(file) {
+  const img = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const s = Math.min(1, 1200 / img.width, 900 / img.height);
+  const w = Math.round(img.width * s), h = Math.round(img.height * s);
+  const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+  const ctx = cv.getContext("2d"); ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, 0, 0, w, h);
+  const L = await logo(), side = Math.round(Math.min(w, h) * 0.55), k = side / Math.max(L.width, L.height);
+  const lw = Math.round(L.width * k), lh = Math.round(L.height * k);
+  ctx.globalAlpha = 0.22; ctx.drawImage(L, Math.round((w - lw) / 2), Math.round((h - lh) / 2), lw, lh); ctx.globalAlpha = 1;
+  const blob = await new Promise(r => cv.toBlob(r, "image/jpeg", 0.78));
+  return new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(",")[1]); fr.readAsDataURL(blob); });
+}
+
+function readForm() {
+  const c = {};
+  const need = { make: "Marca", model: "Modello", ver: "Versione", price: "Prezzo", km: "Chilometri", fuel: "Alimentazione", gear: "Cambio", euro: "Classe emissioni" };
+  for (const [k, n] of Object.entries(need)) if (!$(k).value.trim()) throw new Error("Manca: " + n);
+  const m = $("regm").value, y = +$("regy").value;
+  if (!m || !(y > 1950 && y <= new Date().getFullYear() + 1)) throw new Error("Immatricolazione non valida (mese e anno)");
+  if (!photos.length) throw new Error("Aggiungi almeno una foto");
+  const sub = $("sub").value.trim();
+  if (sub && !/^https:\/\/www\.subito\.it\//.test(sub)) throw new Error("Il link Subito deve iniziare con https://www.subito.it/");
+  Object.assign(c, { make: $("make").value.trim(), model: $("model").value.trim(), ver: $("ver").value.trim(), price: Math.round(+$("price").value),
+    reg: `${m}/${y}`, km: Math.round(+$("km").value), fuel: $("fuel").value.trim(), euro: $("euro").value.trim(), gear: $("gear").value.trim() });
+  if (+$("cv").value) c.cv = Math.round(+$("cv").value);
+  if ($("color").value.trim()) c.color = $("color").value.trim();
+  if ($("owners").value.trim()) c.owners = $("owners").value.trim();
+  c.body = $("body").value;
+  if (sub) c.sub = sub;
+  return c;
+}
+
+async function blobB64(b64) { return (await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: b64, encoding: "base64" }) })).sha; }
+
+// Applica una modifica all'elenco e pubblica tutto in un unico commit.
+async function publish(change, message, photoPlan) {
+  const h = await head();
+  const files = await loadFiles(h.sha);
+  let cars = SiteBuild.parseCars(files.index);
+  const tree = [];
+  if (photoPlan) {
+    let oldSha = {};
+    if (photoPlan.some(p => p.old)) {
+      const t = await gh(`/git/trees/${h.tree}?recursive=1`);
+      for (const e of t.tree) oldSha[e.path] = e.sha;
+    }
+    for (let k = 0; k < photoPlan.length; k++) {
+      const p = photoPlan[k];
+      $("prog").textContent = `Foto ${k + 1} di ${photoPlan.length}…`;
+      const sha = p.old ? oldSha[p.old] : await blobB64(await processPhoto(p.file));
+      if (!sha) throw new Error("Foto non trovata: " + p.old);
+      tree.push({ path: `img/${photoPlan.pid}_${k}.jpg`, mode: "100644", type: "blob", sha });
+    }
+  }
+  const res = change(cars);
+  cars = res.cars;
+  for (const p of res.remove || []) tree.push({ path: p, mode: "100644", type: "blob", sha: null });
+  $("prog").textContent = "Pubblicazione…";
+  const out = SiteBuild.build(files, cars);
+  tree.push({ path: "index.html", mode: "100644", type: "blob", content: out.index },
+            { path: "llms.txt", mode: "100644", type: "blob", content: out.llms },
+            { path: "sitemap.xml", mode: "100644", type: "blob", content: out.sitemap });
+  const nt = await gh("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: h.tree, tree }) });
+  const now = new Date().toISOString();
+  const nc = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message, tree: nt.sha, parents: [h.sha], author: Object.assign({ date: now }, AUTHOR), committer: Object.assign({ date: now }, AUTHOR) }) });
+  await gh(`/git/refs/heads/${BR}`, { method: "PATCH", body: JSON.stringify({ sha: nc.sha }) });
+  CARS = out.cars;
+}
+
+$("save").onclick = async () => {
+  let c;
+  try { c = readForm(); } catch (e) { return msg(e.message, "err"); }
+  const btns = [$("save"), $("cancel")]; btns.forEach(b => b.disabled = true);
+  try {
+    const old = editing;
+    const samePhotos = old && photos.length === old.n && photos.every((p, k) => p.old === `img/${old.pid}_${k}.jpg`);
+    let plan = null, removeOld = [];
+    if (samePhotos) c.pid = old.pid, c.n = old.n;
+    else {
+      c.pid = String(Date.now()); c.n = photos.length;
+      plan = photos.slice(); plan.pid = c.pid;
+      if (old) removeOld = Array.from({ length: old.n }, (_, k) => `img/${old.pid}_${k}.jpg`);
+    }
+    const title = `${c.make} ${c.model} ${c.ver}`;
+    await publish(cars => {
+      if (old) {
+        const i = cars.findIndex(x => x.pid === old.pid);
+        if (i < 0) throw new Error("L'auto non c'è più nell'elenco (forse eliminata da un altro dispositivo). Ricarica la pagina.");
+        cars[i] = c;
+      } else cars.push(c);
+      return { cars, remove: removeOld };
+    }, old ? `Gestione auto: modificata ${title} (${SiteBuild.eur(c.price)})` : `Gestione auto: aggiunta ${title} (${SiteBuild.eur(c.price)})`, plan);
+    renderList(); show("home");
+    msg(`Salvato: ${title}. Il sito si aggiorna entro 1–2 minuti.`, "ok");
+  } catch (e) {
+    msg("Salvataggio non riuscito: " + e.message, "err");
+  } finally { btns.forEach(b => b.disabled = false); $("prog").textContent = ""; }
+};
+
+$("list").onclick = async e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.e != null) return openEditor(CARS[+b.dataset.e]);
+  const c = CARS[+b.dataset.d];
+  if (!confirm(`Eliminare dal sito ${c.make} ${c.model} ${c.ver}?`)) return;
+  b.disabled = true; msg("Eliminazione in corso…");
+  try {
+    await publish(cars => ({ cars: cars.filter(x => x.pid !== c.pid), remove: Array.from({ length: c.n }, (_, k) => `img/${c.pid}_${k}.jpg`) }),
+      `Gestione auto: rimossa ${c.make} ${c.model} ${c.ver}`);
+    renderList(); msg(`Eliminata: ${c.make} ${c.model}. Il sito si aggiorna entro 1–2 minuti.`, "ok");
+  } catch (err) { b.disabled = false; msg("Eliminazione non riuscita: " + err.message, "err"); }
+};
+
+$("add").onclick = () => openEditor(null);
+$("cancel").onclick = () => { show("home"); msg(""); };
+$("enter").onclick = () => { TOKEN = $("token").value.trim(); if (!TOKEN) return; try { localStorage.setItem("nico_token", TOKEN); } catch (e) {} login(); };
+$("token").onkeydown = e => { if (e.key === "Enter") $("enter").click(); };
+$("logout").onclick = () => { if (!confirm("Uscire? Dovrai reinserire la chiave su questo dispositivo.")) return; try { localStorage.removeItem("nico_token"); } catch (e) {} TOKEN = null; $("token").value = ""; show("login"); };
+
+if (TOKEN) login(); else show("login");
+</script>
+</body>
+</html>
