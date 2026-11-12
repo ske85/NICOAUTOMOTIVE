@@ -188,6 +188,7 @@ footer img{width:34px;border-radius:50%}
 .gal-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:rgba(13,14,16,.7);color:var(--white);font-size:22px;cursor:pointer}
 .gal-nav.p{left:12px}.gal-nav.n{right:12px}
 .thumbs{display:flex;gap:8px;padding:10px 12px 0;overflow-x:auto}
+.gal-count{position:absolute;right:12px;bottom:12px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(13,14,16,.75)}
 .thumbs button{flex:0 0 84px;height:63px;padding:0;border:2px solid transparent;border-radius:6px;overflow:hidden;cursor:pointer;background:none;opacity:.6}
 .thumbs button.on{border-color:var(--gold);opacity:1}
 .thumbs img{width:100%;height:100%;object-fit:cover}
@@ -586,8 +587,8 @@ const CARS = [
  {make:"Porsche",model:"Macan",ver:"3.0 S Diesel",price:26990,reg:"11/2015",km:234000,fuel:"Diesel",euro:"Euro 6",gear:"Automatico (PDK)",body:"suv",url:AM+"porsche-macan-3-0-s-diesel/184660428",sub:S+"porsche-macan-3-0-s-diesel-bari-663872620.htm"},
  {make:"Land Rover",model:"Range Rover Sport",ver:"3.0 SDV6 249 CV HSE",price:33500,reg:"06/2021",km:145000,fuel:"Diesel",euro:"Euro 6",gear:"Automatico",cv:248,color:"Bianco",owners:"2 proprietari",body:"suv",url:AM+"land-rover-range-sport-3-0-sdv6-249-cv-hse/183821154",sub:S+"land-rover-range-sport-3-0-sdv6-249-cv-hse-bari-650124565.htm"}
 ];
-const MULTI = new Set([2,4,5,6,7,8,9,12,13,15]);
-CARS.forEach((c,i)=>{c.id=i;c.year=+c.reg.split("/")[1];c.photos=Array.from({length:MULTI.has(i)?4:1},(_,k)=>`img/c${i}_${k}.jpg`);});
+const NPH = [30, 30, 29, 20, 30, 30, 30, 30, 30, 30, 30, 20, 30, 30, 30, 30];
+CARS.forEach((c,i)=>{c.id=i;c.year=+c.reg.split("/")[1];c.photos=Array.from({length:NPH[i]||1},(_,k)=>`img/c${i}_${k}.jpg`);});
 
 const BODY_LABEL={city:"Berlina",wagon:"Station wagon",suv:"SUV",mpv:"Monovolume"};
 const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,".");const eur=n=>"€ "+fmt(n);
@@ -642,6 +643,8 @@ function show(i){
   idx=(i+cur.photos.length)%cur.photos.length;
   $("galImg").src=cur.photos[idx];
   document.querySelectorAll(".thumbs button").forEach((b,k)=>b.classList.toggle("on",k===idx));
+  const gc=$("gc"); if(gc) gc.textContent=`${idx+1} / ${cur.photos.length}`;
+  const on=document.querySelector(".thumbs button.on"); if(on) on.scrollIntoView({block:"nearest",inline:"center"});
 }
 function openCar(id){
   const c=CARS[id];cur=c;lastFocus=document.activeElement;
@@ -653,8 +656,9 @@ function openCar(id){
   $("dlg").innerHTML=`<button class="close" type="button" id="closeBtn" aria-label="Chiudi">×</button>
     <div class="gal-main"><img id="galImg" src="${c.photos[0]}" alt="${esc(c.make+" "+c.model+" "+c.ver+" usata, Nico Automotive Santeramo in Colle")}">
       ${many?'<button class="gal-nav p" type="button" id="gp" aria-label="Foto precedente">‹</button><button class="gal-nav n" type="button" id="gn" aria-label="Foto successiva">›</button>':""}
+      ${many?'<span class="gal-count" id="gc"></span>':""}
     </div>
-    ${many?`<div class="thumbs">${c.photos.map((p,k)=>`<button type="button" data-k="${k}" aria-label="Foto ${k+1}"><img src="${p}" alt=""></button>`).join("")}</div>`:""}
+    ${many?`<div class="thumbs">${c.photos.map((p,k)=>`<button type="button" data-k="${k}" aria-label="Foto ${k+1}"><img src="${p}" alt="" loading="lazy"></button>`).join("")}</div>`:""}
     <div class="inner">
       <span class="eyebrow">${esc(c.make)}</span>
       <h2 id="dlgTitle">${esc(c.model)}</h2>
