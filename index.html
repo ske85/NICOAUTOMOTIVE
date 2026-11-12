@@ -170,6 +170,11 @@ section.seo{border-top:1px solid var(--line);padding:64px 0}
 .btn.fb .fb-star{color:#4f8ff7}
 footer .credit{width:100%;text-align:center;padding-top:12px;margin-top:4px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.04em}
 footer .credit strong{color:var(--gold);font-weight:600}
+.dfrac{position:relative;cursor:pointer;display:inline-block}
+.dfrac-mail{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:7px 12px;white-space:nowrap;opacity:0;visibility:hidden;transition:opacity .15s;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.dfrac-mail a{color:var(--white);text-decoration:none;font-size:13px}
+.dfrac-mail a:hover{color:var(--gold)}
+.dfrac:hover .dfrac-mail,.dfrac:focus-within .dfrac-mail,.dfrac.open .dfrac-mail{opacity:1;visibility:visible}
 /* Contatti */
 section.contacts{border-top:1px solid var(--line);padding:64px 0}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:22px}
@@ -595,7 +600,7 @@ footer img{width:34px;border-radius:50%}
   </section>
 </main>
 
-<footer><div class="wrap"><span style="display:flex;gap:10px;align-items:center"><img src="img/logo.png" alt="">Nico Automotive · Via Gioia zona PIP, Santeramo in Colle (BA)</span><span>Tel. 339 265 1438 · <a href="https://www.facebook.com/profile.php?id=61556295489713" target="_blank" rel="noopener">Facebook</a> · <a href="https://impresapiu.subito.it/shops/52560-nico-automotive" target="_blank" rel="noopener">Subito</a> · Prezzi e condizioni come indicato negli annunci</span><span class="credit">Sito realizzato da <strong>DFrac</strong></span></div></footer>
+<footer><div class="wrap"><span style="display:flex;gap:10px;align-items:center"><img src="img/logo.png" alt="">Nico Automotive · Via Gioia zona PIP, Santeramo in Colle (BA)</span><span>Tel. 339 265 1438 · <a href="https://www.facebook.com/profile.php?id=61556295489713" target="_blank" rel="noopener">Facebook</a> · <a href="https://impresapiu.subito.it/shops/52560-nico-automotive" target="_blank" rel="noopener">Subito</a> · Prezzi e condizioni come indicato negli annunci</span><span class="credit">Sito realizzato da <span class="dfrac" tabindex="0" role="button" aria-label="DFrac, mostra contatto"><strong>DFrac</strong><span class="dfrac-mail" role="tooltip"><a href="mailto:domenicofrac@hotmail.it">domenicofrac@hotmail.it</a></span></span></span></div></footer>
 
 <div class="dlg-back" id="dlgBack" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
   <div class="dlg" id="dlg"></div>
@@ -724,6 +729,7 @@ document.addEventListener("keydown",e=>{
   if(cur&&cur.photos.length>1){if(e.key==="ArrowRight")show(idx+1);if(e.key==="ArrowLeft")show(idx-1);}
 });
 render();
+document.querySelector(".dfrac")?.addEventListener("click",e=>{if(e.target.tagName!=="A")e.currentTarget.classList.toggle("open");});
 </script>
 </body>
 </html>
