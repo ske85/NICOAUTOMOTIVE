@@ -120,8 +120,10 @@ section.salone{padding:72px 0}
 .mosaic img{width:100%;height:100%;object-fit:cover}
 .mosaic figcaption{position:absolute;left:10px;bottom:10px;font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;background:rgba(13,14,16,.75)}
 .m1{grid-column:span 4;grid-row:span 2}.m2{grid-column:span 2;grid-row:span 2}
-.m3,.m4,.m5{grid-column:span 2;grid-row:span 1}
-@media (max-width:760px){.mosaic{grid-template-columns:1fr 1fr;grid-auto-rows:150px}.m1{grid-column:span 2}.m2{grid-column:span 1;grid-row:span 2}.m3,.m4,.m5{grid-column:span 1}}
+.mw{grid-column:span 3;grid-row:span 2}
+.mh{grid-column:span 3;grid-row:span 2}
+.m1 img{object-position:center 35%}
+@media (max-width:760px){.mosaic{grid-template-columns:1fr 1fr;grid-auto-rows:150px}.m1{grid-column:span 2}.m2{grid-column:span 1;grid-row:span 2}.m2{grid-column:span 2;grid-row:span 2}.mw{grid-column:span 2;grid-row:span 2}.mh{grid-column:span 1;grid-row:span 2}}
 .perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:28px}
 .perks div{background:var(--panel);padding:20px}
 .perks h3{font-family:var(--display);font-size:16px;font-weight:600;margin:0 0 6px;color:var(--gold)}
@@ -360,11 +362,12 @@ footer img{width:34px;border-radius:50%}
         <p>Showroom al coperto, area esterna con salottino e parcheggio, a due passi dalla zona PIP di Santeramo. Prenditi un caffè, guarda le auto con calma e prova quella che ti piace.</p>
       </div>
       <div class="mosaic">
-        <figure class="m1"><img src="img/s-facciata.jpg" alt="Facciata del salone con l'insegna Nico Automotive"><figcaption>Lo showroom</figcaption></figure>
+        <figure class="m1"><img src="img/s-facciata.jpg" alt="Facciata del salone Nico Automotive con l'insegna e la vetrata d'ingresso"><figcaption>Lo showroom</figcaption></figure>
         <figure class="m2"><img src="img/s-insegna.jpg" alt="Insegna Nico Automotive sul muro in pietra all'ingresso"><figcaption>L'ingresso</figcaption></figure>
-        <figure class="m3"><img src="img/s-reception.jpg" alt="Reception e zona attesa con poltroncine"><figcaption>Accoglienza</figcaption></figure>
-        <figure class="m4"><img src="img/s-esterno.jpg" alt="Area esterna con salottino bianco su prato sintetico"><figcaption>Area esterna</figcaption></figure>
-        <figure class="m5"><img src="img/s-logo.jpg" alt="Parete interna con il logo Nico Automotive"><figcaption>Interni</figcaption></figure>
+        <figure class="mw"><img src="img/s-reception.jpg" alt="Accoglienza con bancone bianco, poltroncine e il logo Nico Automotive sulla parete in 3D"><figcaption>Accoglienza</figcaption></figure>
+        <figure class="mw"><img src="img/s-interni.jpg" alt="Sala espositiva con quadro panoramico di una strada di montagna e rivestimenti in 3D"><figcaption>Sala espositiva</figcaption></figure>
+        <figure class="mh"><img src="img/s-esterno.jpg" alt="Area esterna con salottino bianco su prato sintetico accanto all'insegna"><figcaption>Area esterna</figcaption></figure>
+        <figure class="mh"><img src="img/s-logo.jpg" style="object-position:center 25%" alt="Interni del salone: parete con il logo Nico Automotive, rivestimenti in 3D e inserti verdi"><figcaption>Interni</figcaption></figure>
       </div>
       <div class="perks">
         <div><h3>Auto su richiesta</h3><p>Cerchi un modello preciso? Lo troviamo per te in Italia e all'estero.</p></div>
