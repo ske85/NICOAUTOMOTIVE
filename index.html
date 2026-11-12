@@ -110,6 +110,14 @@ section.stock{padding:56px 0 24px}
 .car:hover .more{color:var(--gold)}
 .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--stone)}
 
+
+/* Partner Subito */
+.partner{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.partner img{width:100%;height:100%;object-fit:cover;aspect-ratio:1/1;object-position:center 62%}
+.partner .txt{padding:22px 24px 22px 0}
+.partner h3{font-family:var(--display);font-weight:600;font-size:22px;margin:6px 0 8px}
+.partner p{margin:0 0 16px;color:#c9cbce;max-width:56ch}
+@media (max-width:640px){.partner{grid-template-columns:1fr;gap:0}.partner img{aspect-ratio:4/3}.partner .txt{padding:18px 20px 22px}}
 /* Salone */
 section.salone{padding:72px 0}
 .salone .lead{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:28px}
@@ -352,7 +360,16 @@ footer img{width:34px;border-radius:50%}
         <div class="price-row"><span class="price">€ 33.500</span><span class="more">Dettagli →</span></div>
       </div>
     </button></div>
-    </div>
+          <div class="partner">
+        <img src="img/subito-partner.jpg" alt="Bollino Subito Motori Partner Ufficiale 2026 sul bancone del salone">
+        <div class="txt">
+          <span class="eyebrow">Partner ufficiale Subito Motori 2026</span>
+          <h3>Le nostre auto sono anche su Subito</h3>
+          <p>Siamo concessionario partner ufficiale di Subito Motori per il 2026. Su Subito trovi le nostre auto con tutte le foto e le descrizioni complete.</p>
+          <a class="btn" href="https://impresapiu.subito.it/shops/52560-nico-automotive" target="_blank" rel="noopener">Vedi il nostro negozio su Subito</a>
+        </div>
+      </div>
+</div>
   </section>
 
   <section class="salone" id="salone">
