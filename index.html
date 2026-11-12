@@ -126,7 +126,7 @@ section.stock{padding:56px 0 24px}
 @media (max-width:640px){.partner{grid-template-columns:1fr;gap:0}.partner img{aspect-ratio:4/3}.partner .txt{padding:18px 20px 22px}}
 
 /* Logo sulle foto ritagliate */
-.mosaic figure::after,.partner .ph::after{content:"";position:absolute;left:12px;bottom:12px;width:clamp(40px,11%,68px);aspect-ratio:1/1;background:url(img/logo-wm.png) center/contain no-repeat;filter:drop-shadow(0 2px 6px rgba(0,0,0,.55));opacity:.92;pointer-events:none}
+.mosaic figure::after,.partner .ph::after{content:"";position:absolute;inset:0;background:url(img/logo-wm.png) center/auto 55% no-repeat;opacity:.22;pointer-events:none}
 .partner .ph{position:relative;height:100%}
 @media (max-width:760px){.mosaic figure figcaption{bottom:auto;top:10px}}
 /* Salone */
