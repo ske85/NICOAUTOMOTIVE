@@ -1,7 +1,7 @@
 name: Aggiorna auto da Multigestionale
 on:
   schedule:
-    - cron: "11,41 * * * *"
+    - cron: "12,42 * * * *"
   workflow_dispatch:
     inputs:
       test:
@@ -16,7 +16,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    steps:
+    steps:9
       - uses: actions/checkout@v4
       - run: pip install -q pillow
       - name: Leggi il feed Multigestionale e aggiorna il sito
