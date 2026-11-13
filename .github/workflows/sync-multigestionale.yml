@@ -1,0 +1,37 @@
+name: Aggiorna auto da Multigestionale
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Solo prova (nessuna modifica)"
+        type: boolean
+        default: false
+permissions:
+  contents: write
+  pages: write
+concurrency: sync-multigestionale
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q pillow
+      - name: Leggi il feed Multigestionale e aggiorna il sito
+        env:
+          MG_CC: ${{ secrets.MG_CC }}
+        run: python .github/mg_sync.py ${{ inputs.test && '--dry' || '' }}
+      - name: Commit e pubblica
+        if: ${{ !inputs.test }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -A index.html llms.txt sitemap.xml img
+          if git diff --cached --quiet; then echo "Nessuna modifica"; exit 0; fi
+          git config user.name ske85
+          git config user.email ske85@users.noreply.github.com
+          git commit -q -m "Aggiornamento auto da Multigestionale"
+          git push
+          gh api -X POST repos/${{ github.repository }}/pages/builds || true
