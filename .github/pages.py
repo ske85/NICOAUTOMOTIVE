@@ -190,6 +190,11 @@ def car_ld(c, x):
     return d
 
 
+def prose(d):
+    """Vero solo se la descrizione contiene frasi scritte dal venditore, non il solo elenco delle dotazioni."""
+    return any(len(l) > 70 or ". " in l for l in d.split("\n")[1:])
+
+
 def car_page(c, x, cars):
     path = f"auto/{c['slug']}/"
     n = c.get("n", 1)
@@ -237,7 +242,7 @@ def car_page(c, x, cars):
       <h2>{esc(name(c))}: <strong class="goldtext">scheda dell'auto</strong></h2>
       <p>{esc(c['make'])} {esc(c['model'])} {esc(c['ver'])} usata, immatricolata a {MESI[int(c['reg'][:2]) - 1]} {year(c)}, con {fmt(c['km'])} km. Alimentazione {esc(c['fuel'].lower())}, cambio {esc(c['gear'].lower())}{', ' + esc(c['euro']) if c.get('euro') else ''}{', colore ' + esc(c['color'].lower()) if c.get('color') else ''}. L'auto è visibile nel salone di Santeramo in Colle, in provincia di Bari, e si può provare su strada su appuntamento.</p>
       {'<h3>Dotazioni</h3><ul class="opts">' + ''.join(f'<li>{esc(o)}</li>' for o in opts) + '</ul>' if opts else ''}
-      {'<details class="vdp-desc"><summary>Descrizione del venditore</summary><p>' + esc(x['desc']).replace(chr(10), '<br>') + '</p></details>' if x.get('desc') else ''}
+      {'<details class="vdp-desc"><summary>Descrizione del venditore</summary><p>' + esc(x['desc']).replace(chr(10), '<br>') + '</p></details>' if prose(x.get('desc', '')) else ''}
     </section>
     {PERKS}
     {'<section class="vdp-sec"><h2>Tutte le <strong class="goldtext">foto</strong></h2><div class="photos">' + ''.join(f'<a href="{p}" data-k="{k}"><img src="{p}" alt="{esc(alt)} - foto {k + 1}" width="1200" height="900" loading="lazy" decoding="async"></a>' for k, p in enumerate(photos) if k) + '</div></section>' if many else ''}
