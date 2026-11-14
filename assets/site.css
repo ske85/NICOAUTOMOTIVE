@@ -95,6 +95,7 @@ section.stock{padding:56px 0 24px}
 .price-row{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:6px}
 .price{font-family:var(--display);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums;color:var(--gold)}
 .more{font-size:14px;color:var(--stone)}
+.pnote{margin:-4px 0 0;font-size:12px;color:var(--stone)}
 .car:hover .more{color:var(--gold)}
 .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--stone)}
 
@@ -218,7 +219,8 @@ footer img{width:34px;border-radius:50%}
 .dlg .inner{padding:20px 22px 24px}
 .dlg h2{font-family:var(--display);font-weight:600;font-size:28px;margin:4px 0 0;line-height:1.1}
 .dlg .ver{color:var(--stone);margin:4px 0 14px}
-.dlg .price{display:block;margin-bottom:16px}
+.dlg .price{display:block;margin-bottom:4px}
+.dlg-pnote{margin:0 0 16px}
 .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 0 18px}
 .specs div{background:var(--panel-2);padding:10px 12px}
 .specs dt{font-size:11px;color:var(--stone);text-transform:uppercase;letter-spacing:.1em}
@@ -239,7 +241,8 @@ main.page{padding-top:18px}
 .vdp-gal .gal-main{border-radius:14px;overflow:hidden;border:1px solid var(--line)}
 .vdp-info h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,4vw,40px);line-height:1.08;margin:6px 0 0}
 .vdp-info h1 .ver{display:block;font:400 16px/1.4 var(--body);color:var(--stone);margin:8px 0 12px}
-.vdp-info .price{display:block;font-size:34px;margin-bottom:14px}
+.vdp-info .price{display:block;font-size:34px;margin-bottom:4px}
+.vdp-pnote{margin:0 0 16px!important}
 .vdp-info .actions{margin-bottom:18px}
 .vdp-sec{padding:44px 0 8px}
 .vdp-sec h2,.lp-head h1{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.4vw,34px);margin:0 0 14px;text-wrap:balance}

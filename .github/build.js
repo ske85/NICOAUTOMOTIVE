@@ -28,6 +28,7 @@
         <p class="ver">${esc(c.ver)}</p>
         <div class="specs-row"><span>${year(c)}</span><span>${fmt(c.km)} km</span><span>${c.cv ? c.cv + " CV" : esc(c.euro)}</span></div>
         <div class="price-row"><span class="price">${eur(c.price)}</span><span class="more">Dettagli →</span></div>
+        <p class="pnote">Prezzo IVA inclusa, passaggio di proprietà escluso</p>
       </div>
     </a>`;
 
@@ -57,7 +58,7 @@
           vehicleModelDate: String(year(c)), mileageFromOdometer: { "@type": "QuantitativeValue", value: c.km, unitCode: "KMT" },
           fuelType: c.fuel, vehicleTransmission: c.gear, itemCondition: "https://schema.org/UsedCondition",
           image: `${SITE}img/${c.pid}_0.jpg`, url: link(c),
-          offers: { "@type": "Offer", price: c.price, priceCurrency: "EUR", availability: "https://schema.org/InStock", seller: { "@id": SITE + "#dealer" } }
+          offers: { "@type": "Offer", price: c.price, priceCurrency: "EUR", priceSpecification: { "@type": "PriceSpecification", price: c.price, priceCurrency: "EUR", valueAddedTaxIncluded: true }, availability: "https://schema.org/InStock", seller: { "@id": SITE + "#dealer" } }
         }, c.color ? { color: c.color } : {})
       }));
       return a + JSON.stringify(ld) + z;

@@ -160,6 +160,7 @@ def card(c):
         <p class="ver">{esc(c['ver'])}</p>
         <div class="specs-row"><span>{year(c)}</span><span>{fmt(c['km'])} km</span><span>{str(c['cv']) + ' CV' if c.get('cv') else esc(c['euro'])}</span></div>
         <div class="price-row"><span class="price">{eur(c['price'])}</span><span class="more">Dettagli →</span></div>
+        <p class="pnote">Prezzo IVA inclusa, passaggio di proprietà escluso</p>
       </div>
     </a>"""
 
@@ -179,7 +180,8 @@ def car_ld(c, x):
          "mileageFromOdometer": {"@type": "QuantitativeValue", "value": c["km"], "unitCode": "KMT"},
          "fuelType": c["fuel"], "vehicleTransmission": c["gear"], "bodyType": BODY[c["body"]], "itemCondition": "https://schema.org/UsedCondition",
          "image": [f"{SITE}img/{c['pid']}_{k}.jpg" for k in range(min(c.get("n", 1), 6))], "url": f"{SITE}auto/{c['slug']}/",
-         "offers": {"@type": "Offer", "price": c["price"], "priceCurrency": "EUR", "availability": "https://schema.org/InStock",
+         "offers": {"@type": "Offer", "price": c["price"], "priceCurrency": "EUR",
+                    "priceSpecification": {"@type": "PriceSpecification", "price": c["price"], "priceCurrency": "EUR", "valueAddedTaxIncluded": True}, "availability": "https://schema.org/InStock",
                     "url": f"{SITE}auto/{c['slug']}/", "seller": {"@id": SITE + "#dealer"}}}
     if c.get("color"): d["color"] = c["color"]
     if c.get("cv"): d["vehicleEngine"] = {"@type": "EngineSpecification", "enginePower": {"@type": "QuantitativeValue", "value": c["cv"], "unitCode": "BHP"}}
@@ -203,7 +205,7 @@ def car_page(c, x, cars):
     photos = [f"/img/{c['pid']}_{k}.jpg" for k in range(n)]
     title = fit([f"{name(c)} usata {year(c)} a {eur(c['price'])} | Nico Automotive", f"{name(c)} usata {year(c)} | Nico Automotive",
                  f"{name(c)} usata {year(c)}", f"{c['make']} {c['model']} usata {year(c)} a {eur(c['price'])} | Nico Automotive"])
-    desc = (f"{name(c)} usata, {c['reg']}, {fmt(c['km'])} km, {c['fuel'].lower()}, cambio {c['gear'].lower()}. In vendita a {eur(c['price'])} "
+    desc = (f"{name(c)} usata, {c['reg']}, {fmt(c['km'])} km, {c['fuel'].lower()}, cambio {c['gear'].lower()}. In vendita a {eur(c['price'])} IVA inclusa "
             f"da Nico Automotive a Santeramo in Colle (Bari), con garanzia 12 mesi, permuta e finanziamento.")
     specs = [("Immatricolazione", c["reg"]), ("Chilometri", fmt(c["km"]) + " km"), ("Alimentazione", c["fuel"]), ("Cambio", c["gear"]),
              ("Classe", c["euro"]), ("Carrozzeria", BODY[c["body"]])]
@@ -233,6 +235,7 @@ def car_page(c, x, cars):
         <span class="eyebrow">{esc(c['make'])} · usata</span>
         <h1>{esc(c['make'] + ' ' + c['model'])} <span class="ver">{esc(c['ver'])} · usata {year(c)}</span></h1>
         <span class="price">{eur(c['price'])}</span>
+        <p class="pnote vdp-pnote">Prezzo IVA inclusa, passaggio di proprietà escluso</p>
         <div class="actions">
           <a class="btn wa" href="{wa(msg)}" target="_blank" rel="noopener">Chiedi su WhatsApp</a>
           <a class="btn solid" href="tel:{TEL}">Chiama {TEL_TXT}</a>
@@ -307,7 +310,7 @@ LEGAL = {
 "note-legali": ("Note legali", "Note legali | Nico Automotive", "Note legali del sito nicoautomotive.com: titolare, diritti su testi e foto, valore delle informazioni sulle auto in vendita.", [
  ("Titolare del sito", "Il sito www.nicoautomotive.com è gestito da <b>Nico Automotive di Lella Nicola</b>, ditta individuale, con sede in Via Gioia zona PIP lotto S7, 70029 Santeramo in Colle (BA). Partita IVA 07044350721. PEC: <a href=\"mailto:lellanicola@pec.it\">lellanicola@pec.it</a>. Telefono: <a href=\"tel:+393392651438\">339 265 1438</a>."),
  ("Diritti su testi, foto e marchio", "Testi, fotografie delle auto e del salone, logo, grafica e ogni altro contenuto di questo sito sono di proprietà di Nico Automotive o usati con autorizzazione, e sono protetti dalla legge sul diritto d'autore (L. 633/1941). <b>È vietato copiare, scaricare, ripubblicare o modificare</b> tutto o parte di questi contenuti, in particolare le fotografie, su altri siti, portali di annunci o social network, senza il consenso scritto del titolare. Sono consentiti la consultazione e la condivisione dei link alle pagine del sito."),
- ("Informazioni sulle auto e prezzi", "Le schede delle auto, i prezzi, le foto e le caratteristiche tecniche hanno valore indicativo. Possono contenere errori o non essere aggiornate, ad esempio se un'auto è appena stata venduta. Le informazioni pubblicate <b>non costituiscono offerta al pubblico</b> ai sensi dell'art. 1336 del Codice Civile: disponibilità, prezzo finale, dotazioni e condizioni di vendita vanno sempre confermati in salone prima dell'acquisto e sono definiti solo nel contratto di vendita."),
+ ("Informazioni sulle auto e prezzi", "Le schede delle auto, i prezzi, le foto e le caratteristiche tecniche hanno valore indicativo. Possono contenere errori o non essere aggiornate, ad esempio se un'auto è appena stata venduta. I prezzi indicati sono <b>IVA inclusa, passaggio di proprietà escluso</b>. Le informazioni pubblicate <b>non costituiscono offerta al pubblico</b> ai sensi dell'art. 1336 del Codice Civile: disponibilità, prezzo finale, dotazioni e condizioni di vendita vanno sempre confermati in salone prima dell'acquisto e sono definiti solo nel contratto di vendita."),
  ("Garanzia", "Le auto usate vendute ai consumatori sono coperte dalla garanzia legale di conformità prevista dal Codice del Consumo (D.Lgs. 206/2005). Durata e condizioni sono indicate nel contratto di vendita."),
  ("Link ad altri siti", "Il sito contiene collegamenti a servizi esterni, come WhatsApp, Google Maps, Subito, Facebook e Trustpilot. Nico Automotive non è responsabile dei contenuti né del trattamento dei dati svolto da questi servizi, che seguono le loro condizioni e informative."),
 ]),
@@ -353,7 +356,8 @@ main.page{padding-top:18px}
 .vdp-gal .gal-main{border-radius:14px;overflow:hidden;border:1px solid var(--line)}
 .vdp-info h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,4vw,40px);line-height:1.08;margin:6px 0 0}
 .vdp-info h1 .ver{display:block;font:400 16px/1.4 var(--body);color:var(--stone);margin:8px 0 12px}
-.vdp-info .price{display:block;font-size:34px;margin-bottom:14px}
+.vdp-info .price{display:block;font-size:34px;margin-bottom:4px}
+.vdp-pnote{margin:0 0 16px!important}
 .vdp-info .actions{margin-bottom:18px}
 .vdp-sec{padding:44px 0 8px}
 .vdp-sec h2,.lp-head h1{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.4vw,34px);margin:0 0 14px;text-wrap:balance}
