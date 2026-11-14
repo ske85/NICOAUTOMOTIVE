@@ -141,7 +141,7 @@ def foot(cars):
     return f"""
   <section class="seo zones"><div class="wrap">{links_block(cars)}</div></section>
 </main>
-<footer><div class="wrap"><span style="display:flex;gap:10px;align-items:center"><img src="/img/logo-96.png" alt="" width="34" height="34" loading="lazy">Nico Automotive · {esc(ADDR)}</span><span>Tel. <a href="tel:{TEL}">{TEL_TXT}</a> · <a href="/">Tutte le auto</a></span></div></footer>
+<footer><div class="wrap"><span style="display:flex;gap:10px;align-items:center"><img src="/img/logo-96.png" alt="" width="34" height="34" loading="lazy">Nico Automotive · {esc(ADDR)}</span><span>Tel. <a href="tel:{TEL}">{TEL_TXT}</a> · <a href="/">Tutte le auto</a></span><span class="legal">Nico Automotive di Lella Nicola · Ditta individuale · P.IVA 07044350721 · Via Gioia zona PIP lotto S7, 70029 Santeramo in Colle (BA) · PEC <a href="mailto:lellanicola@pec.it">lellanicola@pec.it</a> · © 2026 Tutti i diritti riservati · <a href="/note-legali/">Note legali</a> · <a href="/privacy/">Privacy</a></span></div></footer>
 </body>
 </html>
 """
@@ -303,6 +303,38 @@ def list_page(path, title, h1, lead, paras, cars, shown, faq, all_cars):
     return out + foot(all_cars)
 
 
+LEGAL = {
+"note-legali": ("Note legali", "Note legali | Nico Automotive", "Note legali del sito nicoautomotive.com: titolare, diritti su testi e foto, valore delle informazioni sulle auto in vendita.", [
+ ("Titolare del sito", "Il sito www.nicoautomotive.com è gestito da <b>Nico Automotive di Lella Nicola</b>, ditta individuale, con sede in Via Gioia zona PIP lotto S7, 70029 Santeramo in Colle (BA). Partita IVA 07044350721. PEC: <a href=\"mailto:lellanicola@pec.it\">lellanicola@pec.it</a>. Telefono: <a href=\"tel:+393392651438\">339 265 1438</a>."),
+ ("Diritti su testi, foto e marchio", "Testi, fotografie delle auto e del salone, logo, grafica e ogni altro contenuto di questo sito sono di proprietà di Nico Automotive o usati con autorizzazione, e sono protetti dalla legge sul diritto d'autore (L. 633/1941). <b>È vietato copiare, scaricare, ripubblicare o modificare</b> tutto o parte di questi contenuti, in particolare le fotografie, su altri siti, portali di annunci o social network, senza il consenso scritto del titolare. Sono consentiti la consultazione e la condivisione dei link alle pagine del sito."),
+ ("Informazioni sulle auto e prezzi", "Le schede delle auto, i prezzi, le foto e le caratteristiche tecniche hanno valore indicativo. Possono contenere errori o non essere aggiornate, ad esempio se un'auto è appena stata venduta. Le informazioni pubblicate <b>non costituiscono offerta al pubblico</b> ai sensi dell'art. 1336 del Codice Civile: disponibilità, prezzo finale, dotazioni e condizioni di vendita vanno sempre confermati in salone prima dell'acquisto e sono definiti solo nel contratto di vendita."),
+ ("Garanzia", "Le auto usate vendute ai consumatori sono coperte dalla garanzia legale di conformità prevista dal Codice del Consumo (D.Lgs. 206/2005). Durata e condizioni sono indicate nel contratto di vendita."),
+ ("Link ad altri siti", "Il sito contiene collegamenti a servizi esterni, come WhatsApp, Google Maps, Subito, Facebook e Trustpilot. Nico Automotive non è responsabile dei contenuti né del trattamento dei dati svolto da questi servizi, che seguono le loro condizioni e informative."),
+]),
+"privacy": ("Privacy", "Informativa privacy | Nico Automotive", "Informativa sul trattamento dei dati personali dei visitatori del sito nicoautomotive.com (art. 13 GDPR).", [
+ ("Titolare del trattamento", "Nico Automotive di Lella Nicola, ditta individuale, Via Gioia zona PIP lotto S7, 70029 Santeramo in Colle (BA), P.IVA 07044350721. Per qualsiasi richiesta sui dati personali: PEC <a href=\"mailto:lellanicola@pec.it\">lellanicola@pec.it</a> oppure telefono <a href=\"tel:+393392651438\">339 265 1438</a>."),
+ ("Quali dati raccogliamo", "Il sito non ha moduli di registrazione e non raccoglie dati personali direttamente. Il server che ospita il sito (GitHub Pages, servizio di GitHub Inc.) registra in modo automatico dati tecnici necessari al funzionamento, come l'indirizzo IP e il tipo di browser, per motivi di sicurezza. Il sito <b>non usa cookie di profilazione né strumenti di statistica</b>, e i caratteri tipografici sono ospitati sul sito stesso."),
+ ("Contatti via WhatsApp, telefono ed email", "Se ci contatti tramite i pulsanti WhatsApp, il telefono o la PEC, riceviamo i dati che scegli di inviarci (nome, numero, messaggio, auto di interesse). Li usiamo solo per risponderti e per gestire la tua richiesta o l'eventuale trattativa di vendita (art. 6.1.b GDPR), e li conserviamo per il tempo necessario a questi scopi e agli obblighi di legge. Il messaggio WhatsApp passa attraverso il servizio di WhatsApp (Meta), che lo tratta secondo la propria informativa."),
+ ("Mappa di Google", "La mappa nella pagina dei contatti viene caricata solo se clicchi su <i>Mostra la mappa</i>. Da quel momento Google può raccogliere dati di navigazione e installare propri cookie, secondo l'informativa di Google (policies.google.com/privacy). Se non clicchi, nessun dato viene inviato a Google."),
+ ("Link esterni", "I collegamenti a Subito, Facebook, Trustpilot e alle recensioni Google portano a siti di terzi, che trattano i dati secondo le proprie informative."),
+ ("I tuoi diritti", "Puoi chiedere in qualsiasi momento di accedere ai tuoi dati, correggerli, cancellarli, limitarne il trattamento, opporti o riceverli in formato portabile (artt. 15-22 GDPR), scrivendo alla PEC indicata sopra. Hai anche il diritto di presentare reclamo al Garante per la protezione dei dati personali (www.garanteprivacy.it)."),
+ ("Aggiornamenti", "Questa informativa può essere aggiornata. Ultima modifica: 14 novembre 2026."),
+]),
+}
+
+
+def legal_page(slug, cars):
+    label, title, desc, secs = LEGAL[slug]
+    out = head(title, desc, slug + "/", "img/hero.jpg", [crumbs_ld([(label, slug + "/")])])
+    out += f"""  <div class="wrap">
+    {crumbs([(label, "")])}
+    <section class="lp-head"><span class="eyebrow">Nico Automotive</span><h1>{label}</h1></section>
+    {''.join(f'<section class="vdp-sec legal-sec"><h2>{h}</h2><p>{t}</p></section>' for h, t in secs)}
+  </div>
+"""
+    return out + foot(cars)
+
+
 def write(path, text):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
@@ -342,6 +374,9 @@ main.page{padding-top:18px}
 .lp-head h1{font-size:clamp(30px,4.6vw,46px);font-weight:600;margin:10px 0 16px}
 .lp-head .actions{margin-top:20px}
 section.zones{padding:44px 0;margin-top:44px}
+.legal-sec{padding:26px 0 0}
+.legal-sec h2{font-size:22px!important;font-weight:600!important}
+.legal-sec a{color:var(--gold)}
 .lk-h{font-size:clamp(22px,3vw,30px)!important}
 .lk{max-width:none!important;line-height:2;font-size:15px}
 .lk b{color:var(--white)}
@@ -406,6 +441,9 @@ fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.wr
             [text], cars, shown, faq, cars))
         urls.append(path)
     urls += [f"auto/{c['slug']}/" for c in cars]
+    for slug in LEGAL:
+        write(slug + "/index.html", legal_page(slug, cars))
+    urls += [slug + "/" for slug in LEGAL]
 
     # home: blocco di link interni
     block = "<!--LINKS-->" + links_block(cars) + "<!--/LINKS-->"
