@@ -92,6 +92,18 @@ section.stock{padding:56px 0 24px}
 .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--stone)}
 
 
+/* Richiesta auto */
+.req{display:grid;grid-template-columns:1fr 1.5fr;gap:24px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:22px 24px}
+.req h3{font-family:var(--display);font-weight:300;font-size:24px;line-height:1.2;margin:6px 0 8px}
+.req h3 strong{font-weight:700}
+.req p{margin:0;color:#c9cbce}
+.req-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.req label{display:block;font-size:11px;font-weight:600;color:var(--stone);margin-bottom:4px;text-transform:uppercase;letter-spacing:.12em}
+.req input,.req select{width:100%;font:500 15px var(--body);padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);color:var(--white)}
+.req-go{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+@media (max-width:860px){.req{grid-template-columns:1fr;padding:20px}}
+@media (max-width:420px){.req-fields{grid-template-columns:1fr}}
+
 /* Partner Subito */
 .partner{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .partner img{width:100%;height:100%;object-fit:cover;aspect-ratio:1/1;object-position:center 62%}

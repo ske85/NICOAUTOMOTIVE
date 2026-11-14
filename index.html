@@ -120,6 +120,18 @@ section.stock{padding:56px 0 24px}
 .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--stone)}
 
 
+/* Richiesta auto */
+.req{display:grid;grid-template-columns:1fr 1.5fr;gap:24px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:22px 24px}
+.req h3{font-family:var(--display);font-weight:300;font-size:24px;line-height:1.2;margin:6px 0 8px}
+.req h3 strong{font-weight:700}
+.req p{margin:0;color:#c9cbce}
+.req-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.req label{display:block;font-size:11px;font-weight:600;color:var(--stone);margin-bottom:4px;text-transform:uppercase;letter-spacing:.12em}
+.req input,.req select{width:100%;font:500 15px var(--body);padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);color:var(--white)}
+.req-go{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+@media (max-width:860px){.req{grid-template-columns:1fr;padding:20px}}
+@media (max-width:420px){.req-fields{grid-template-columns:1fr}}
+
 /* Partner Subito */
 .partner{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .partner img{width:100%;height:100%;object-fit:cover;aspect-ratio:1/1;object-position:center 62%}
@@ -503,6 +515,21 @@ footer img{width:34px;border-radius:50%}
         <div class="price-row"><span class="price">€ 33.500</span><span class="more">Dettagli →</span></div>
       </div>
     </a><!--/GRID--></div>
+
+      <form class="req" id="req" action="https://wa.me/393392651438" target="_blank" rel="noopener">
+        <div class="req-txt">
+          <span class="eyebrow">Auto su richiesta</span>
+          <h3>Cerchi un modello preciso? <strong class="goldtext">Te lo troviamo noi</strong></h3>
+          <p>Scegli marca e modello: ti rispondiamo su WhatsApp con disponibilità e prezzo, senza impegno.</p>
+        </div>
+        <div class="req-fields">
+          <div><label for="rq-make">Marca</label><select id="rq-make" required><option value="">Scegli la marca</option><option>Abarth</option><option>Alfa Romeo</option><option>Audi</option><option>BMW</option><option>BYD</option><option>Citroën</option><option>Cupra</option><option>Dacia</option><option>DS</option><option>Fiat</option><option>Ford</option><option>Honda</option><option>Hyundai</option><option>Iveco</option><option>Jaguar</option><option>Jeep</option><option>Kia</option><option>Lancia</option><option>Land Rover</option><option>Lexus</option><option>Maserati</option><option>Mazda</option><option>Mercedes-Benz</option><option>MG</option><option>Mini</option><option>Mitsubishi</option><option>Nissan</option><option>Opel</option><option>Peugeot</option><option>Porsche</option><option>Renault</option><option>Seat</option><option>Škoda</option><option>Smart</option><option>Suzuki</option><option>Tesla</option><option>Toyota</option><option>Volkswagen</option><option>Volvo</option><option value="Altra marca">Altra marca</option></select></div>
+          <div><label for="rq-model">Modello</label><input id="rq-model" list="rq-models" placeholder="Es. Golf" autocomplete="off"><datalist id="rq-models"></datalist></div>
+          <div><label for="rq-budget">Budget massimo</label><select id="rq-budget"><option value="">Indifferente</option><option>5.000 €</option><option>10.000 €</option><option>15.000 €</option><option>20.000 €</option><option>30.000 €</option><option>oltre 30.000 €</option></select></div>
+          <div><label for="rq-fuel">Alimentazione</label><select id="rq-fuel"><option value="">Indifferente</option><option>Benzina</option><option>Diesel</option><option>Ibrida</option><option>GPL</option><option>Metano</option><option>Elettrica</option></select></div>
+          <div class="req-go"><button class="btn wa" type="submit">Chiedi su WhatsApp</button><a class="btn" href="tel:+393392651438">oppure chiama</a></div>
+        </div>
+      </form>
           <div class="partner">
         <div class="ph"><img src="img/subito-partner.jpg" width="700" height="651" loading="lazy" decoding="async" alt="Bollino Subito Motori Partner Ufficiale 2026 sul bancone del salone"></div>
         <div class="txt">
@@ -746,6 +773,14 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape")closeCar();
   if(cur&&cur.photos.length>1){if(e.key==="ArrowRight")show(idx+1);if(e.key==="ArrowLeft")show(idx-1);}
 });
+
+const MODELS={"Abarth":["500","595","695","124 Spider","600e"],"Alfa Romeo":["Giulietta","Giulia","Stelvio","Tonale","Junior","MiTo","159"],"Audi":["A1","A3","A4","A5","A6","Q2","Q3","Q5","Q7","Q8","TT","e-tron"],"BMW":["Serie 1","Serie 2","Serie 3","Serie 4","Serie 5","X1","X2","X3","X4","X5","X6","i3","iX1"],"BYD":["Atto 3","Dolphin","Seal","Seal U"],"Citroën":["C1","C3","C3 Aircross","C4","C4 Cactus","C5 Aircross","Berlingo","Jumpy"],"Cupra":["Formentor","Leon","Born","Ateca","Terramar"],"Dacia":["Sandero","Duster","Jogger","Spring","Logan","Bigster"],"DS":["DS 3","DS 4","DS 7"],"Fiat":["500","500X","500L","Panda","Tipo","Punto","Grande Punto","600","Doblò","Fiorino","Ducato","Scudo"],"Ford":["Fiesta","Focus","Puma","Kuga","EcoSport","Mondeo","C-Max","Ranger","Transit","Transit Custom","Mustang"],"Honda":["Jazz","Civic","HR-V","CR-V","ZR-V"],"Hyundai":["i10","i20","i30","Bayon","Kona","Tucson","Santa Fe","Ioniq 5"],"Iveco":["Daily"],"Jaguar":["E-Pace","F-Pace","XE","XF","F-Type","I-Pace"],"Jeep":["Renegade","Compass","Avenger","Wrangler","Cherokee","Grand Cherokee"],"Kia":["Picanto","Rio","Stonic","Ceed","XCeed","Niro","Sportage","Sorento","EV6"],"Lancia":["Ypsilon","Delta","Musa"],"Land Rover":["Range Rover","Range Rover Sport","Range Rover Evoque","Range Rover Velar","Discovery","Discovery Sport","Defender"],"Lexus":["UX","NX","RX","CT","LBX"],"Maserati":["Ghibli","Levante","Grecale","Quattroporte"],"Mazda":["Mazda2","Mazda3","CX-3","CX-30","CX-5","CX-60","MX-5"],"Mercedes-Benz":["Classe A","Classe B","Classe C","Classe E","CLA","GLA","GLB","GLC","GLE","Classe V","Vito","Sprinter"],"MG":["MG3","MG4","ZS","HS","EHS"],"Mini":["Mini 3 porte","Mini 5 porte","Cooper","Countryman","Clubman","Cabrio"],"Mitsubishi":["Space Star","ASX","Eclipse Cross","Outlander","L200"],"Nissan":["Micra","Juke","Qashqai","X-Trail","Leaf","Navara"],"Opel":["Corsa","Astra","Mokka","Crossland","Grandland","Karl","Combo","Vivaro"],"Peugeot":["108","208","2008","308","3008","5008","508","Partner","Expert","Boxer"],"Porsche":["Macan","Cayenne","Panamera","911","718 Boxster","718 Cayman","Taycan"],"Renault":["Twingo","Clio","Captur","Mégane","Scénic","Kadjar","Austral","Arkana","Kangoo","Trafic","Master"],"Seat":["Ibiza","Leon","Arona","Ateca","Tarraco"],"Škoda":["Fabia","Scala","Octavia","Kamiq","Karoq","Kodiaq","Superb"],"Smart":["ForTwo","ForFour","#1","#3"],"Suzuki":["Swift","Ignis","Vitara","S-Cross","Jimny"],"Tesla":["Model 3","Model Y","Model S","Model X"],"Toyota":["Aygo","Aygo X","Yaris","Yaris Cross","Corolla","C-HR","RAV4","Hilux","Proace"],"Volkswagen":["up!","Polo","Golf","T-Cross","T-Roc","Taigo","Tiguan","Passat","Touran","Touareg","ID.3","ID.4","Caddy","Transporter"],"Volvo":["V40","V60","V90","XC40","XC60","XC90","EX30"]};
+$("rq-make").addEventListener("change",e=>{$("rq-models").innerHTML=(MODELS[e.target.value]||[]).map(m=>`<option value="${esc(m)}">`).join("");$("rq-model").value="";$("rq-model").placeholder=MODELS[e.target.value]?"Es. "+MODELS[e.target.value][0]:"Scrivi il modello";});
+$("req").addEventListener("submit",e=>{e.preventDefault();
+  const mk=$("rq-make").value,md=$("rq-model").value.trim(),b=$("rq-budget").value,f=$("rq-fuel").value;
+  let t=`Ciao Nico, cerco una ${mk==="Altra marca"?"auto":mk}${md?" "+md:""}`;
+  if(f)t+=`, ${f.toLowerCase()}`; if(b)t+=`, budget ${b.startsWith("oltre")?b:"fino a "+b}`;
+  window.open("https://wa.me/393392651438?text="+encodeURIComponent(t+". Potete aiutarmi?"),"_blank","noopener");});
 render();
 document.querySelector(".dfrac")?.addEventListener("click",e=>{if(e.target.tagName!=="A")e.currentTarget.classList.toggle("open");});
 </script>
