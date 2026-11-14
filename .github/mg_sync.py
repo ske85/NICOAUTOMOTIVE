@@ -102,6 +102,9 @@ def save_photos(car, imgs):
         w.putalpha(w.getchannel("A").point(lambda v: int(v * 0.22)))
         im.paste(w, ((im.width - w.width) // 2, (im.height - w.height) // 2), w)
         im.save(f"img/{car['pid']}_{n}.jpg", "JPEG", quality=78, optimize=True, progressive=True)
+        if n == 0:
+            t = im.copy(); t.thumbnail((640, 480), Image.LANCZOS)
+            t.save(f"img/{car['pid']}_t.jpg", "JPEG", quality=72, optimize=True, progressive=True)
         n += 1
     if not n:
         raise RuntimeError(f"nessuna foto scaricata per l'annuncio {car['mg']}")
@@ -148,7 +151,7 @@ const r=B.build({index:fs.readFileSync('index.html','utf8'),llms:fs.readFileSync
 fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.writeFileSync('sitemap.xml',r.sitemap);"""], check=True)
     for c in gone:
         for f in os.listdir("img"):
-            if re.fullmatch(re.escape(c["pid"]) + r"_\d+\.jpg", f):
+            if re.fullmatch(re.escape(c["pid"]) + r"_(\d+|t)\.jpg", f):
                 os.remove(os.path.join("img", f))
 
 

@@ -17,7 +17,7 @@
 
   const card = (c, i) => `
     <button class="car" type="button" data-id="${i}" aria-label="${esc(c.make + " " + c.model + ", " + eur(c.price))}">
-      <div class="ph"><img src="img/${c.pid}_0.jpg" alt="${esc(c.make + " " + c.model + " " + c.ver + " usata in vendita a Santeramo in Colle")}" loading="lazy">
+      <div class="ph"><img src="img/${c.pid}_t.jpg" alt="${esc(c.make + " " + c.model + " " + c.ver + " usata in vendita a Santeramo in Colle")}" width="640" height="480" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=this.src.replace('_t.jpg','_0.jpg')">
         <span class="badge">${esc(c.fuel)}${isAuto(c) ? " · Automatico" : ""}</span>
         ${c.owners === "Unico proprietario" ? '<span class="badge g">Unico proprietario</span>' : ""}
       </div>
