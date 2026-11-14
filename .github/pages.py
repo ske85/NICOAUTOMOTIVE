@@ -92,10 +92,7 @@ def head(title, desc, path, image, ld):
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/img/logo.png">
 <script type="application/ld+json">{json.dumps({"@context": "https://schema.org", "@graph": ld}, ensure_ascii=False)}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{FONTS}"></noscript>
+<link rel="preload" href="/assets/fonts/montserrat-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
