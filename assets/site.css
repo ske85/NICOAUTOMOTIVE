@@ -130,6 +130,8 @@ section.seo{border-top:1px solid var(--line);padding:64px 0}
 @media (max-width:860px){.seo-grid{grid-template-columns:1fr;gap:32px}}
 .seo h2{font-family:var(--display);font-weight:300;font-size:clamp(26px,3.4vw,36px);margin:6px 0 16px;text-wrap:balance}
 .seo h2 strong{font-weight:700}
+.seo p a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(212,180,106,.35)}
+.seo p a:hover{border-color:var(--gold)}
 .seo p{color:#c9cbce;max-width:62ch;margin:0 0 14px}
 .faq{margin-top:12px;border-top:1px solid var(--line)}
 .faq details{border-bottom:1px solid var(--line);padding:14px 0}
