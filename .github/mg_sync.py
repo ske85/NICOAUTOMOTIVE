@@ -41,7 +41,9 @@ def read_feed():
             id=t("ad_number"), make=t("make"), model=t("model"), version=t("version"), cls=t("vehicle_class"),
             cat=t("vehicle_category"), reg=t("first_registration_date"), km=t("mileage"), cv=t("power_cv"),
             fuel=t("fuel_type"), color=t("color"), price=t("price"), euro=t("emissions_class"), gear=t("gearbox"),
-            owners=t("owners_count"), imgs=[(i.text or "").strip() for i in e.findall("images/element") if (i.text or "").strip()],
+            owners=t("owners_count"), desc=t("description"), kw=t("power_kw"), cc=t("cubic_capacity"), seats=t("num_seats"),
+            doors=t("doors_count"), trans=t("transmission_type"), opts=[(o.text or "").strip() for o in e.findall("optionals/element") if (o.text or "").strip()],
+            imgs=[(i.text or "").strip() for i in e.findall("images/element") if (i.text or "").strip()],
         ))
     return ads
 
@@ -141,8 +143,26 @@ def main():
     for c in gone:
         log.append(f"VENDUTA/rimossa: {c['make']} {c['model']} {c['ver']}")
     print("\n".join(log) or "nessuna modifica")
-    if DRY or not log:
+    if DRY:
         return
+    # dati aggiuntivi per le schede auto (descrizione, dotazioni, dettagli tecnici)
+    by_id = {a["id"]: a for a in ads}
+    extra = {}
+    for c in out:
+        a = by_id[c["mg"]]
+        d = re.sub(r"\r\n?", "\n", a.get("desc", "")).strip()
+        x = {"desc": re.sub(r"\n{3,}", "\n\n", d), "opts": a.get("opts", []), "kw": num(a.get("kw")), "cc": num(a.get("cc")), "seats": num(a.get("seats")),
+             "doors": a.get("doors", ""), "trans": a.get("trans", "")}
+        extra[c["mg"]] = {k: v for k, v in x.items() if v}
+    os.makedirs("data", exist_ok=True)
+    json.dump(extra, open("data/extra.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1, sort_keys=True)
+    if log:
+        rebuild(out, gone)
+    subprocess.run([sys.executable, ".github/pages.py"], check=True)
+    subprocess.run(["git", "add", "-A"], check=True)  # include le pagine nuove nel commit del workflow
+
+
+def rebuild(out, gone):
     json.dump(out, open("/tmp/cars.json", "w", encoding="utf-8"), ensure_ascii=False)
     subprocess.run(["node", "-e", """
 const fs=require('fs'),B=require('./admin/build.js');

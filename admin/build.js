@@ -8,6 +8,7 @@
   const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
   const isAuto = c => c.gear.startsWith("Automatico");
   const year = c => +c.reg.split("/").pop();
+  const link = c => c.slug ? SITE + "auto/" + c.slug + "/" : (c.sub || SITE);
 
   function parseCars(index) {
     const m = index.match(/\/\*CARS\*\/([\s\S]*?)\/\*END\*\//);
@@ -16,7 +17,7 @@
   }
 
   const card = (c, i) => `
-    <button class="car" type="button" data-id="${i}" aria-label="${esc(c.make + " " + c.model + ", " + eur(c.price))}">
+    <a class="car" href="${c.slug ? "auto/" + c.slug + "/" : "#auto"}" data-id="${i}" aria-label="${esc(c.make + " " + c.model + ", " + eur(c.price))}">
       <div class="ph"><img src="img/${c.pid}_t.jpg" alt="${esc(c.make + " " + c.model + " " + c.ver + " usata in vendita a Santeramo in Colle")}" width="640" height="480" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=this.src.replace('_t.jpg','_0.jpg')">
         <span class="badge">${esc(c.fuel)}${isAuto(c) ? " · Automatico" : ""}</span>
         ${c.owners === "Unico proprietario" ? '<span class="badge g">Unico proprietario</span>' : ""}
@@ -28,7 +29,7 @@
         <div class="specs-row"><span>${year(c)}</span><span>${fmt(c.km)} km</span><span>${c.cv ? c.cv + " CV" : esc(c.euro)}</span></div>
         <div class="price-row"><span class="price">${eur(c.price)}</span><span class="more">Dettagli →</span></div>
       </div>
-    </button>`;
+    </a>`;
 
   function replaceOnce(s, re, fn, what) {
     let n = 0;
@@ -55,13 +56,13 @@
           "@type": "Car", name: `${c.make} ${c.model} ${c.ver}`, brand: { "@type": "Brand", name: c.make }, model: c.model,
           vehicleModelDate: String(year(c)), mileageFromOdometer: { "@type": "QuantitativeValue", value: c.km, unitCode: "KMT" },
           fuelType: c.fuel, vehicleTransmission: c.gear, itemCondition: "https://schema.org/UsedCondition",
-          image: `${SITE}img/${c.pid}_0.jpg`, url: c.sub || SITE,
+          image: `${SITE}img/${c.pid}_0.jpg`, url: link(c),
           offers: { "@type": "Offer", price: c.price, priceCurrency: "EUR", availability: "https://schema.org/InStock", seller: { "@id": SITE + "#dealer" } }
         }, c.color ? { color: c.color } : {})
       }));
       return a + JSON.stringify(ld) + z;
     }, "JSON-LD");
-    const rows = cars.map(c => `- [${c.make} ${c.model} ${c.ver}](${c.sub || SITE}): ${eur(c.price)}, ${c.reg}, ${fmt(c.km)} km, ${c.fuel.toLowerCase()}, ${c.gear.toLowerCase()}`).join("\n");
+    const rows = cars.map(c => `- [${c.make} ${c.model} ${c.ver}](${link(c)}): ${eur(c.price)}, ${c.reg}, ${fmt(c.km)} km, ${c.fuel.toLowerCase()}, ${c.gear.toLowerCase()}`).join("\n");
     let t = replaceOnce(files.llms, /(## Auto in vendita\n\n[^\n]*\n\n)(?:- [^\n]*\n)*/, (m, a) => a + rows + "\n", "llms");
     t = t.replace(/Elenco sincronizzato con il negozio Subito di Nico Automotive\./, "Elenco aggiornato dal salone Nico Automotive.");
     t = t.replace(/Informazioni aggiornate al [^.]*\./, `Informazioni aggiornate al ${today.getDate()} ${MESI[today.getMonth()]} ${today.getFullYear()}.`);
