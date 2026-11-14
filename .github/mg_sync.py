@@ -165,7 +165,7 @@ def main():
 def rebuild(out, gone):
     json.dump(out, open("/tmp/cars.json", "w", encoding="utf-8"), ensure_ascii=False)
     subprocess.run(["node", "-e", """
-const fs=require('fs'),B=require('./admin/build.js');
+const fs=require('fs'),B=require('./.github/build.js');
 const r=B.build({index:fs.readFileSync('index.html','utf8'),llms:fs.readFileSync('llms.txt','utf8'),sitemap:fs.readFileSync('sitemap.xml','utf8')},
   JSON.parse(fs.readFileSync('/tmp/cars.json','utf8')), new Date(Date.now()+3600e3));
 fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.writeFileSync('sitemap.xml',r.sitemap);"""], check=True)

@@ -1,5 +1,5 @@
 // Rigenera index.html, llms.txt e sitemap.xml a partire dall'elenco auto.
-// Usato dalla pagina /admin (browser) e da Node per le prove.
+// Usato dagli script di aggiornamento (Node).
 (function (root) {
   const SITE = "https://www.nicoautomotive.com/";
   const MESI = "gennaio febbraio marzo aprile maggio giugno luglio agosto settembre ottobre novembre dicembre".split(" ");

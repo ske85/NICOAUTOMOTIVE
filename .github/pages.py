@@ -190,6 +190,11 @@ def car_ld(c, x):
     return d
 
 
+def fit(options, n=62):
+    """Il primo titolo che entra nei risultati di Google senza essere tagliato."""
+    return next((t for t in options if len(t) <= n), options[-1])
+
+
 def prose(d):
     """Vero solo se la descrizione contiene frasi scritte dal venditore, non il solo elenco delle dotazioni."""
     return any(len(l) > 70 or ". " in l for l in d.split("\n")[1:])
@@ -199,7 +204,8 @@ def car_page(c, x, cars):
     path = f"auto/{c['slug']}/"
     n = c.get("n", 1)
     photos = [f"/img/{c['pid']}_{k}.jpg" for k in range(n)]
-    title = f"{name(c)} usata del {year(c)} a {eur(c['price'])} | Nico Automotive"
+    title = fit([f"{name(c)} usata {year(c)} a {eur(c['price'])} | Nico Automotive", f"{name(c)} usata {year(c)} | Nico Automotive",
+                 f"{name(c)} usata {year(c)}", f"{c['make']} {c['model']} usata {year(c)} a {eur(c['price'])} | Nico Automotive"])
     desc = (f"{name(c)} usata, {c['reg']}, {fmt(c['km'])} km, {c['fuel'].lower()}, cambio {c['gear'].lower()}. In vendita a {eur(c['price'])} "
             f"da Nico Automotive a Santeramo in Colle (Bari), con garanzia 12 mesi, permuta e finanziamento.")
     specs = [("Immatricolazione", c["reg"]), ("Chilometri", fmt(c["km"]) + " km"), ("Alimentazione", c["fuel"]), ("Cambio", c["gear"]),
@@ -359,7 +365,7 @@ def main():
     if missing:  # salva gli indirizzi delle pagine nell'elenco auto e rigenera la home
         json.dump(cars, open("/tmp/cars_slug.json", "w", encoding="utf-8"), ensure_ascii=False)
         subprocess.run(["node", "-e", """
-const fs=require('fs'),B=require('./admin/build.js');
+const fs=require('fs'),B=require('./.github/build.js');
 const r=B.build({index:fs.readFileSync('index.html','utf8'),llms:fs.readFileSync('llms.txt','utf8'),sitemap:fs.readFileSync('sitemap.xml','utf8')},
   JSON.parse(fs.readFileSync('/tmp/cars_slug.json','utf8')), new Date(Date.now()+3600e3));
 fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.writeFileSync('sitemap.xml',r.sitemap);"""], check=True)
@@ -398,7 +404,7 @@ fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.wr
                ("Ritirate la mia auto in permuta?", "Sì. La valutazione è gratuita e il valore viene scalato dal prezzo dell'auto che scegli."),
                ("Non trovo il modello che cerco: potete procurarlo?", "Sì, cerchiamo auto su richiesta in Italia e all'estero in base alle tue esigenze e al tuo budget.")]
         write(path + "index.html", list_page(
-            path, f"{h1} | Nico Automotive", h1,
+            path, fit([f"{h1} | Nico Automotive", f"{label} a Santeramo (BA) | Nico Automotive", f"{label} | Nico Automotive"]), h1,
             f"{label} da Nico Automotive a Santeramo in Colle (Bari): {len(shown)} disponibili ora, con garanzia 12 mesi, permuta e finanziamento.",
             [text], cars, shown, faq, cars))
         urls.append(path)
