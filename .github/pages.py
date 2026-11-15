@@ -168,7 +168,7 @@ def card(c):
 PERKS = """
     <div class="perks">
       <div><h3>Garanzia 12 mesi</h3><p>Ogni auto è controllata prima della consegna ed è coperta da garanzia.</p></div>
-      <div><h3>Finanziamento</h3><p>Rate su misura, anche senza anticipo, con risposta in tempi brevi.</p></div>
+      <div><h3>Finanziamento</h3><p>Pagamento a rate tramite istituti di credito partner, soggetto ad approvazione.</p><p class="pnote">Attenzione: prendere in prestito denaro costa denaro.</p></div>
       <div><h3>Permuta</h3><p>Valutiamo gratis la tua auto e la scaliamo dal prezzo.</p></div>
       <div><h3>Prova su strada</h3><p>Vieni in salone e prova l'auto prima di decidere.</p></div>
     </div>"""
@@ -311,6 +311,7 @@ LEGAL = {
  ("Titolare del sito", "Il sito www.nicoautomotive.com è gestito da <b>Nico Automotive di Lella Nicola</b>, ditta individuale, con sede in Via Gioia zona PIP lotto S7, 70029 Santeramo in Colle (BA). Partita IVA 07044350721. PEC: <a href=\"mailto:lellanicola@pec.it\">lellanicola@pec.it</a>. Telefono: <a href=\"tel:+393392651438\">339 265 1438</a>."),
  ("Diritti su testi, foto e marchio", "Testi, fotografie delle auto e del salone, logo, grafica e ogni altro contenuto di questo sito sono di proprietà di Nico Automotive o usati con autorizzazione, e sono protetti dalla legge sul diritto d'autore (L. 633/1941). <b>È vietato copiare, scaricare, ripubblicare o modificare</b> tutto o parte di questi contenuti, in particolare le fotografie, su altri siti, portali di annunci o social network, senza il consenso scritto del titolare. Sono consentiti la consultazione e la condivisione dei link alle pagine del sito."),
  ("Informazioni sulle auto e prezzi", "Le schede delle auto, i prezzi, le foto e le caratteristiche tecniche hanno valore indicativo. Possono contenere errori o non essere aggiornate, ad esempio se un'auto è appena stata venduta. I prezzi indicati sono <b>IVA inclusa, passaggio di proprietà escluso</b>. Le informazioni pubblicate <b>non costituiscono offerta al pubblico</b> ai sensi dell'art. 1336 del Codice Civile: disponibilità, prezzo finale, dotazioni e condizioni di vendita vanno sempre confermati in salone prima dell'acquisto e sono definiti solo nel contratto di vendita."),
+ ("Finanziamenti", "Nico Automotive non concede direttamente credito. Eventuali finanziamenti sono proposti per conto di istituti di credito partner ed erogati da questi ultimi, previa valutazione del merito creditizio e approvazione. Tassi, TAEG e condizioni sono indicati nella documentazione informativa dell'istituto, da consultare prima della firma. <b>Attenzione: prendere in prestito denaro costa denaro.</b>"),
  ("Garanzia", "Le auto usate vendute ai consumatori sono coperte dalla garanzia legale di conformità prevista dal Codice del Consumo (D.Lgs. 206/2005). Durata e condizioni sono indicate nel contratto di vendita."),
  ("Link ad altri siti", "Il sito contiene collegamenti a servizi esterni, come WhatsApp, Google Maps, Subito, Facebook e Trustpilot. Nico Automotive non è responsabile dei contenuti né del trattamento dei dati svolto da questi servizi, che seguono le loro condizioni e informative."),
 ]),
@@ -436,7 +437,7 @@ fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.wr
     for slug, label, h1, test, text in NEEDS:
         shown = [c for c in cars if test(c)]; path = slug + "/"
         faq = [("Dove posso vedere queste auto?", f"Nel salone Nico Automotive, {ADDR}. Siamo aperti dal lunedì al venerdì 9–13 e 16–20, il sabato 9–13."),
-               ("Posso pagare a rate?", "Sì, proponiamo finanziamenti con rate su misura, anche senza anticipo."),
+               ("Posso pagare a rate?", "Sì, possiamo proporti un finanziamento tramite istituti di credito partner, soggetto ad approvazione. Attenzione: prendere in prestito denaro costa denaro."),
                ("Ritirate la mia auto in permuta?", "Sì. La valutazione è gratuita e il valore viene scalato dal prezzo dell'auto che scegli."),
                ("Non trovo il modello che cerco: potete procurarlo?", "Sì, cerchiamo auto su richiesta in Italia e all'estero in base alle tue esigenze e al tuo budget.")]
         write(path + "index.html", list_page(
