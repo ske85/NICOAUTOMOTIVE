@@ -160,6 +160,7 @@ def main():
         rebuild(out, gone)
     subprocess.run([sys.executable, ".github/pages.py"], check=True)
     subprocess.run(["git", "add", "-A"], check=True)  # include le pagine nuove nel commit del workflow
+    subprocess.run([sys.executable, ".github/indexnow.py", "--worktree"])  # avvisa Bing delle pagine cambiate
 
 
 def rebuild(out, gone):

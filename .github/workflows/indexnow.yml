@@ -1,0 +1,22 @@
+name: Avvisa Bing delle pagine aggiornate
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+      - name: Attendi la pubblicazione del sito
+        if: github.event_name == 'push'
+        run: sleep 90
+      - if: github.event_name == 'push'
+        run: python .github/indexnow.py "${{ github.event.before }}" "${{ github.sha }}"
+      - name: Invia tutte le pagine (avvio manuale)
+        if: github.event_name == 'workflow_dispatch'
+        run: python .github/indexnow.py --all
