@@ -125,6 +125,18 @@ section.stock{padding:56px 0 24px}
 .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--stone)}
 
 
+/* Carosello auto su mobile */
+.cnav,.cshowall{display:none}
+@media (max-width:640px){
+  .is-carousel .grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -20px;padding:2px 20px 8px;scroll-padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .is-carousel .grid::-webkit-scrollbar{display:none}
+  .is-carousel .grid .car{flex:0 0 84%;scroll-snap-align:start}
+  .is-carousel .cnav{display:flex;align-items:center;justify-content:center;gap:18px;margin:10px 0 14px}
+  .is-carousel .cshowall{display:flex;width:100%;gap:0}
+  .cbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:transparent;color:var(--gold);font:400 26px/1 var(--body);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 3px}
+  .ccount{font:600 14px var(--body);color:var(--stone);min-width:56px;text-align:center}
+}
+
 /* Richiesta auto */
 .req{display:grid;grid-template-columns:1fr 1.5fr;gap:24px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:22px 24px}
 .req h3{font-family:var(--display);font-weight:300;font-size:24px;line-height:1.2;margin:6px 0 8px}
@@ -293,7 +305,7 @@ footer img{width:34px;border-radius:50%}
     </div>
   </section>
 
-  <section class="stock" id="auto">
+  <section class="stock is-carousel" id="auto">
     <div class="wrap">
       <div class="sec-head">
         <div><span class="eyebrow">Parco auto</span><h2>Auto usate <strong class="goldtext">in vendita</strong></h2></div>
@@ -560,6 +572,12 @@ footer img{width:34px;border-radius:50%}
         <p class="pnote">Prezzo IVA inclusa, passaggio di proprietà escluso</p>
       </div>
     </a><!--/GRID--></div>
+      <div class="cnav" id="cnav">
+        <button class="cbtn" id="cPrev" type="button" aria-label="Auto precedente">‹</button>
+        <span class="ccount" id="cCount" aria-live="polite">1 / 18</span>
+        <button class="cbtn" id="cNext" type="button" aria-label="Auto successiva">›</button>
+      </div>
+      <button class="btn call cshowall" id="cAll" type="button">Vedi tutte le <span id="cTot">18</span> auto ↓</button>
 
       <form class="req" id="req" action="https://wa.me/393392651438" target="_blank" rel="noopener">
         <div class="req-txt">
@@ -767,8 +785,22 @@ function render(){
       </div>
     </a>`).join(""):`<div class="empty">Nessuna auto con questi filtri. Allarga la ricerca o chiamaci: troviamo noi l'auto che cerchi.</div>`;
 }
-["q","brand","fuel","gear","max","sort"].forEach(id=>$(id).addEventListener("input",render));
-$("reset").addEventListener("click",()=>{["q","brand","fuel","gear","max"].forEach(id=>$(id).value="");$("sort").value="p-asc";render();});
+
+let showAll=false;
+const car1=()=>{const c=$("grid").querySelector(".car");return c?c.offsetWidth+12:1};
+function carousel(){
+  const filtered=["q","brand","fuel","gear","max"].some(id=>$(id).value)||$("sort").value!=="p-asc";
+  const n=$("grid").querySelectorAll(".car").length;
+  $("auto").classList.toggle("is-carousel",!showAll&&!filtered&&n>1);
+  $("cTot").textContent=n;$("grid").scrollLeft=0;cpos();
+}
+function cpos(){const n=$("grid").querySelectorAll(".car").length;$("cCount").textContent=`${Math.min(n,Math.round($("grid").scrollLeft/car1())+1)} / ${n}`;}
+$("grid").addEventListener("scroll",()=>requestAnimationFrame(cpos),{passive:true});
+$("cNext").addEventListener("click",()=>$("grid").scrollBy({left:car1(),behavior:"smooth"}));
+$("cPrev").addEventListener("click",()=>$("grid").scrollBy({left:-car1(),behavior:"smooth"}));
+$("cAll").addEventListener("click",()=>{showAll=true;carousel();$("grid").scrollIntoView({behavior:"smooth",block:"start"});});
+["q","brand","fuel","gear","max","sort"].forEach(id=>$(id).addEventListener("input",()=>{render();carousel();}));
+$("reset").addEventListener("click",()=>{["q","brand","fuel","gear","max"].forEach(id=>$(id).value="");$("sort").value="p-asc";showAll=false;render();carousel();});
 
 let lastFocus=null,cur=null,idx=0;
 function show(i){
@@ -830,7 +862,7 @@ $("req").addEventListener("submit",e=>{e.preventDefault();
   if(f)t+=`, ${f.toLowerCase()}`; if(b)t+=`, budget ${b.startsWith("oltre")?b:"fino a "+b}`;
   window.open("https://wa.me/393392651438?text="+encodeURIComponent(t+". Potete aiutarmi?"),"_blank","noopener");});
 document.querySelector(".map-load")?.addEventListener("click",e=>{if(e.target.closest("a"))return;const b=e.currentTarget,f=document.createElement("iframe");f.title="Mappa: Nico Automotive, Santeramo in Colle";f.src=b.dataset.src;f.allowFullscreen=true;f.referrerPolicy="no-referrer-when-downgrade";b.replaceWith(f);});
-render();
+render();carousel();
 document.querySelector(".dfrac")?.addEventListener("click",e=>{if(e.target.tagName!=="A")e.currentTarget.classList.toggle("open");});
 </script>
 </body>

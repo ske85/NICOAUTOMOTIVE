@@ -49,6 +49,8 @@
     set(/(<b id="f-count">)[^<]*/, cars.length, "f-count");
     set(/(<b id="f-from">)[^<]*/, cars.length ? eur(Math.min(...cars.map(c => c.price))) : "—", "f-from");
     set(/(<b id="f-brands">)[^<]*/, new Set(cars.map(c => c.make)).size, "f-brands");
+    set(/(<span id="cTot">)[^<]*/, cars.length, "cTot");
+    set(/(<span class="ccount" id="cCount"[^>]*>)[^<]*/, "1 / " + cars.length, "cCount");
     set(/(<p id="count"[^>]*>)[^<]*/, cars.length === 1 ? "1 auto trovata" : cars.length + " auto trovate", "count");
     s = replaceOnce(s, /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/, (m, a, json, z) => {
       const ld = JSON.parse(json);

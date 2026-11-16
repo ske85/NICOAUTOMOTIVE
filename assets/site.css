@@ -100,6 +100,18 @@ section.stock{padding:56px 0 24px}
 .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--stone)}
 
 
+/* Carosello auto su mobile */
+.cnav,.cshowall{display:none}
+@media (max-width:640px){
+  .is-carousel .grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -20px;padding:2px 20px 8px;scroll-padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .is-carousel .grid::-webkit-scrollbar{display:none}
+  .is-carousel .grid .car{flex:0 0 84%;scroll-snap-align:start}
+  .is-carousel .cnav{display:flex;align-items:center;justify-content:center;gap:18px;margin:10px 0 14px}
+  .is-carousel .cshowall{display:flex;width:100%;gap:0}
+  .cbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:transparent;color:var(--gold);font:400 26px/1 var(--body);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 3px}
+  .ccount{font:600 14px var(--body);color:var(--stone);min-width:56px;text-align:center}
+}
+
 /* Richiesta auto */
 .req{display:grid;grid-template-columns:1fr 1.5fr;gap:24px;align-items:center;margin-top:28px;background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:22px 24px}
 .req h3{font-family:var(--display);font-weight:300;font-size:24px;line-height:1.2;margin:6px 0 8px}
