@@ -53,6 +53,22 @@ ZONES = [
      "Da Gravina in Puglia si arriva in circa mezz'ora, passando per Altamura. Prima di metterti in viaggio chiedici conferma della disponibilità: le auto più richieste restano poco in salone."),
     ("Laterza", 22, "venticinque minuti",
      "Laterza e il versante tarantino della Murgia sono a circa venticinque minuti. Per chi arriva dalla provincia di Taranto siamo spesso il salone di auto usate più comodo da raggiungere."),
+    ("Sammichele di Bari", 25, "venticinque minuti",
+     "Sammichele di Bari è a circa venticinque minuti dal salone, passando per Gioia del Colle. Se vuoi vedere più auto nella stessa visita, chiamaci prima: te le facciamo trovare pronte, una accanto all'altra."),
+    ("Casamassima", 29, "mezz'ora",
+     "Da Casamassima si arriva in circa mezz'ora. Per chi viene dall'area sud di Bari siamo un'alternativa tranquilla ai grandi saloni: tempo per guardare l'auto con calma, provarla su strada e fare tutte le domande."),
+    ("Toritto", 31, "mezz'ora",
+     "Toritto è a circa mezz'ora di strada, lungo la Murgia. Se preferisci prima un'idea a distanza, scrivici su WhatsApp: ti mandiamo foto e video dell'auto che ti interessa."),
+    ("Grumo Appula", 30, "mezz'ora",
+     "Da Grumo Appula al salone ci vuole circa mezz'ora. Valutiamo gratis la tua auto in permuta: portala con te e scaliamo il valore dal prezzo di quella nuova."),
+    ("Turi", 34, "mezz'ora abbondante",
+     "Turi è a una mezz'ora abbondante dal salone. Se cerchi un modello che non abbiamo in pronta consegna, lo cerchiamo noi su richiesta, in Italia e all'estero."),
+    ("Putignano", 41, "quaranta minuti",
+     "Da Putignano si arriva in circa quaranta minuti. Prima di partire chiamaci per confermare la disponibilità: le auto più richieste restano poco in salone."),
+    ("Ginosa", 31, "mezz'ora",
+     "Ginosa e il versante tarantino sono a circa mezz'ora. Ci occupiamo noi del passaggio di proprietà, anche per chi risiede in provincia di Taranto."),
+    ("Montescaglioso", 36, "mezz'ora abbondante",
+     "Montescaglioso è a una mezz'ora abbondante, passando per Matera. Seguiamo spesso clienti della Basilicata e gestiamo noi tutte le pratiche."),
 ]
 NEEDS = [
     ("auto-usate-sotto-10000-euro", "Auto usate sotto i 10.000 euro", "Auto usate sotto i 10.000 € a Santeramo in Colle (Bari)",
@@ -69,6 +85,13 @@ NEEDS = [
      "Le auto ibride e plug-in presenti in salone. Consumano meno in città e, a seconda del Comune, possono avere agevolazioni su bollo, parcheggi e zone a traffico limitato: verifica sempre le regole in vigore dove abiti."),
 ]
 zone_slug = lambda z: "auto-usate-" + slugify(z[0])
+brand_slug = lambda m: slugify(m) + "-usate"
+
+
+def brands(cars):
+    """Marche con almeno 2 auto in salone: per loro c'è una pagina dedicata."""
+    from collections import Counter
+    return sorted(m for m, k in Counter(c["make"] for c in cars).items() if k >= 2)
 
 
 # ---------- pezzi comuni ----------
@@ -127,12 +150,14 @@ def crumbs_ld(items):
 def links_block(cars):
     z = " · ".join(f'<a href="/{zone_slug(x)}/">Auto usate {esc(x[0])}</a>' for x in ZONES)
     n = " · ".join(f'<a href="/{s}/">{esc(t)}</a>' for s, t, *_ in NEEDS)
+    b = " · ".join(f'<a href="/{brand_slug(m)}/">{esc(m)} usate</a>' for m in brands(cars))
     a = " · ".join(f'<a href="/auto/{c["slug"]}/">{esc(c["make"] + " " + c["model"])} {year(c)}</a>' for c in cars)
     return f"""
       <span class="eyebrow">Dove siamo e cosa cerchi</span>
       <h2 class="lk-h">Auto usate in <strong class="goldtext">provincia di Bari</strong> e dintorni</h2>
       <p class="lk"><b>Per zona:</b> {z}</p>
       <p class="lk"><b>Per esigenza:</b> {n}</p>
+      {f'<p class="lk"><b>Per marca:</b> {b}</p>' if b else ''}
       <p class="lk"><b>Schede auto:</b> {a}</p>
     """
 
@@ -445,6 +470,29 @@ fs.writeFileSync('index.html',r.index);fs.writeFileSync('llms.txt',r.llms);fs.wr
             f"{label} da Nico Automotive a Santeramo in Colle (Bari): {len(shown)} disponibili ora, con garanzia 12 mesi, permuta e finanziamento.",
             [text], cars, shown, faq, cars))
         urls.append(path)
+    made = set()
+    for m in brands(cars):
+        shown = [c for c in cars if c["make"] == m]; path = brand_slug(m) + "/"; made.add(brand_slug(m))
+        models = sorted({c["model"] for c in shown})
+        faq = [(f"Avete altre {m} oltre a quelle pubblicate?", f"Le {m} disponibili sono quelle elencate in questa pagina. Se cerchi un modello o un allestimento diverso, lo troviamo noi su richiesta, in Italia e all'estero."),
+               ("Le auto hanno la garanzia?", "Sì, le auto usate sono coperte da garanzia di 12 mesi e vengono controllate prima della consegna."),
+               ("Posso pagare a rate?", "Sì, possiamo proporti un finanziamento tramite istituti di credito partner, soggetto ad approvazione. Attenzione: prendere in prestito denaro costa denaro."),
+               ("Ritirate la mia auto in permuta?", "Sì. La valutazione è gratuita e il valore viene scalato dal prezzo dell'auto che scegli.")]
+        write(path + "index.html", list_page(
+            path, fit([f"{m} usate a Santeramo in Colle (Bari) | Nico Automotive", f"{m} usate a Santeramo (BA) | Nico Automotive", f"{m} usate | Nico Automotive"]), f"{m} usate in vendita",
+            f"{m} usate in vendita da Nico Automotive a Santeramo in Colle (Bari): {len(shown)} disponibili ({', '.join(models)}), da {eur(min(c['price'] for c in shown))}, con garanzia 12 mesi e permuta.",
+            [f"In salone abbiamo {len(shown)} {m} usate, controllate e con garanzia di 12 mesi: {', '.join(models)}. Le trovi a Santeramo in Colle, in provincia di Bari, e puoi provarle su strada su appuntamento.",
+             f"Cerchi una {m} diversa da queste? Dicci modello, anno e budget: la cerchiamo noi su richiesta."],
+            cars, shown, faq, cars))
+        urls.append(path)
+    try:
+        old = set(json.load(open("data/brand_pages.json")))
+    except Exception:  # noqa: BLE001
+        old = set()
+    for d in old - made:
+        shutil.rmtree(d, ignore_errors=True)
+    os.makedirs("data", exist_ok=True)
+    json.dump(sorted(made), open("data/brand_pages.json", "w"))
     urls += [f"auto/{c['slug']}/" for c in cars]
     for slug in LEGAL:
         write(slug + "/index.html", legal_page(slug, cars))
